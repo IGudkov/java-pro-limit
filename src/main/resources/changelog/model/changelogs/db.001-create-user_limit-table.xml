@@ -1,0 +1,36 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        changelog/dbchangelog-4.27.xsd">
+
+    <changeSet id="001" author="igudkov">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_limit"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="user_limit" remarks="Лимит пользователей">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user_limit_id"/>
+            </column>
+            <column name="user_id"
+                    type="UUID"
+                    remarks="id пользователя">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uq_user_limit_user_id"/>
+            </column>
+            <column name="current_limit"
+                    type="numeric(17,2)"
+                    remarks="Сумма доступного лимита">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <rollback>
+            <dropTable tableName="user_limit"/>
+        </rollback>
+
+    </changeSet>
+
+</databaseChangeLog>
