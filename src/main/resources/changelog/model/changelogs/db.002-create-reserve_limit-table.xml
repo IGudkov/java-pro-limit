@@ -1,0 +1,41 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        changelog/dbchangelog-4.27.xsd">
+
+    <changeSet id="002" author="igudkov">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="reserve_limit"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="reserve_limit" remarks="Зарезервированный лимит">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_reserve_limit_id"/>
+            </column>
+            <column name="user_id"
+                    type="UUID"
+                    remarks="id пользователя">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount"
+                    type="numeric(17,2)"
+                    remarks="Сумма зарезервированного лимита">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at"
+                    type="timestamp without time zone"
+                    remarks="Дата и время вставки записи в таблицу">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <rollback>
+            <dropTable tableName="reserve_limit"/>
+        </rollback>
+
+    </changeSet>
+
+</databaseChangeLog>

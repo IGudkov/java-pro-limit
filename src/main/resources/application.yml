@@ -1,0 +1,41 @@
+server:
+  port: ${APP_PORT:8081}
+  shutdown: graceful
+  servlet:
+    context-path: ${APP_CONTEXT_PATH:/${spring.application.name}}
+    encoding:
+      charset: UTF-8
+      force: true
+
+spring:
+  application:
+    name: limit-service
+    version: 1
+    timezone: ${APP_TIMEZONE:Europe/Moscow}
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      schema: ${DB_SCHEMA}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        format_sql: true
+  liquibase:
+    enabled: ${LIQUIBASE_ENABLED:true}
+    change-log: classpath:changelog/db.changelog-master.xml
+    default-schema: ${DB_SCHEMA}
+
+app:
+  scheduler:
+    reset-user-limit:
+      enabled: ${APP_SCHEDULER_USER_LIMIT_ENABLED:true}
+      cron: ${APP_SCHEDULER_USER_LIMIT_CRON:0 0 0 * * *}
+      limit: ${APP_SCHEDULER_USER_LIMIT}
+

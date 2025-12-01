@@ -1,0 +1,11 @@
+server:
+  port: 8081
+
+spring:
+  jpa:
+    show-sql: true
+app:
+  scheduler:
+    reset-user-limit:
+      limit: 100000.00
+
