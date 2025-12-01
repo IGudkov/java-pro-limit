@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -26,6 +27,8 @@ public class ReserveLimit {
   @Column(name = "amount", nullable = false)
   private BigDecimal amount;
 
+
+  @CreationTimestamp
   @Column(name = "created_at", nullable = false)
   private Instant createdAt;
 

@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public class ResetUserLimitScheduler {
   private final UserLimitService userLimitService;
   @Value("${app.scheduler.reset-user-limit.limit}")
-  BigDecimal defaultUserLimit;
+  private BigDecimal defaultUserLimit;
 
   public ResetUserLimitScheduler(UserLimitService userLimitService) {
     this.userLimitService = userLimitService;

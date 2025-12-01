@@ -3,14 +3,13 @@ package ru.inno.java.pro.limit.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.inno.java.pro.limit.repository.dao.UserLimitDao;
+import ru.inno.java.pro.limit.exception.BusinessServiceException;
 import ru.inno.java.pro.limit.model.dto.CancelResponseDto;
 import ru.inno.java.pro.limit.model.dto.ConfirmResponseDto;
 import ru.inno.java.pro.limit.model.dto.CurrentLimitResponseDto;
 import ru.inno.java.pro.limit.model.dto.ReserveLimitResponseDto;
 import ru.inno.java.pro.limit.model.entity.ReserveLimit;
 import ru.inno.java.pro.limit.model.entity.UserLimit;
-import ru.inno.java.pro.limit.exception.BusinessServiceException;
 import ru.inno.java.pro.limit.repository.UserLimitRepository;
 
 import java.math.BigDecimal;
@@ -24,17 +23,13 @@ public class UserLimitService {
   private final UserLimitRepository userLimitRepository;
   private final ReserveLimitService reserveLimitService;
 
-  private final UserLimitDao userLimitDao;
-
   @Value("${app.scheduler.reset-user-limit.limit}")
-  BigDecimal defaultUserLimit;
+  private BigDecimal defaultUserLimit;
 
   public UserLimitService(UserLimitRepository userLimitRepository,
-                          ReserveLimitService reserveLimitService,
-                          UserLimitDao userLimitDao) {
+                          ReserveLimitService reserveLimitService) {
     this.userLimitRepository = userLimitRepository;
     this.reserveLimitService = reserveLimitService;
-    this.userLimitDao = userLimitDao;
   }
 
   @Transactional
@@ -83,7 +78,7 @@ public class UserLimitService {
     reserveLimitService.delete(reserveLimit);
 
     UserLimit userLimit = userLimitRepository.findByUserId(userId)
-        .orElseThrow(()->new BusinessServiceException(ERROR_USER_LIMIT_USER_ID_NOT_FOUND,
+        .orElseThrow(() -> new BusinessServiceException(ERROR_USER_LIMIT_USER_ID_NOT_FOUND,
             userId));
     BigDecimal currentLimit = userLimit.getCurrentLimit();
     userLimit.setCurrentLimit(currentLimit.add(amount));
@@ -93,8 +88,9 @@ public class UserLimitService {
     return new CancelResponseDto(message);
   }
 
+  @Transactional
   public void resetUserLimit(BigDecimal limit) {
-    userLimitDao.resetUserLimit(limit);
+    userLimitRepository.resetUserLimit(limit);
   }
 
   private UserLimit getOrCreateUserLimitByUserId(UUID userId) {

@@ -1,12 +1,11 @@
 package ru.inno.java.pro.limit.service;
 
 import org.springframework.stereotype.Service;
-import ru.inno.java.pro.limit.model.entity.ReserveLimit;
 import ru.inno.java.pro.limit.exception.BusinessServiceException;
+import ru.inno.java.pro.limit.model.entity.ReserveLimit;
 import ru.inno.java.pro.limit.repository.ReserveLimitRepository;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.UUID;
 
 import static ru.inno.java.pro.limit.exception.BusinessError.ERROR_RESERVE_LIMIT_ID_NOT_FOUND;
@@ -23,7 +22,6 @@ public class ReserveLimitService {
     ReserveLimit reserveLimit = new ReserveLimit();
     reserveLimit.setUserId(userId);
     reserveLimit.setAmount(amount);
-    reserveLimit.setCreatedAt(Instant.now());
     return reserveLimitRepository.save(reserveLimit);
   }
 
